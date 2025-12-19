@@ -263,59 +263,54 @@ Por otro lado, factores domésticos como la política monetaria local y los fluj
 
 ## 7. Modelo de Redes Neuronales (MLP)
 
-Se implementó un **Perceptrón Multicapa (MLPRegressor)** para evaluar si una arquitectura de aprendizaje profundo podría superar la capacidad predictiva de los modelos tradicionales al capturar relaciones no lineales altamente complejas.
+Se implementó un Perceptrón Multicapa (MLPRegressor) con una estrategia de optimización de hiperparámetros (GridSearchCV) para evaluar si una arquitectura de aprendizaje profundo podía capturar relaciones no lineales complejas que los modelos estadísticos tradicionales no detectan.
 
-### Arquitectura y Configuración del Modelo
+## Arquitectura y Configuración del Modelo
 
-- **Estructura:**  
-  Dos capas ocultas de **64** y **32** neuronas respectivamente.
+A diferencia de las pruebas iniciales, se utilizó una validación cruzada temporal para encontrar la arquitectura óptima1. Los mejores hiperparámetros encontrados fueron:
 
-- **Funciones y Optimización:**  
-  Función de activación **ReLU** y optimizador **Adam**.
+- **Estructura de Capas:** Tres capas ocultas densas de (128, 64, 32) neuronas.
+- **Función de Activación:** Logistic (Sigmoide), lo que sugiere una mejor adaptación a la naturaleza acotada de los retornos que la función ReLU.
+- **Regularización:** Alpha de 0.001 (penalización L2).
+- **Optimizador:** Adam con una tasa de aprendizaje inicial de 0.001.
 
-- **Prevención de Sobreajuste:**  
-  Esquema de *early stopping* con una paciencia de **50 iteraciones** para detener el entrenamiento ante la ausencia de mejoras en validación.
+## Desempeño y Comparativa
 
-### Desempeño y Comparativa
+La optimización mejoró drásticamente el desempeño del modelo. A diferencia de las iteraciones previas donde el modelo no generalizaba, el MLP optimizado alcanzó niveles de error competitivos frente a los modelos de ensamble y lineales:
 
-Los resultados obtenidos por la red neuronal fueron inferiores a los modelos de ensamble y regresión lineal penalizada:
+| Modelo         | MSE (Test) | Interpretación del Desempeño                         |
+|---------------|------------|-----------------------------------------------------|
+| XGBoost       | 0.074090   | Mejor desempeño (por margen mínimo).                |
+| Ridge (Lineal)| 0.074256   | Alta competitividad pese a su simplicidad.          |
+| MLP (Optimizado) | 0.074719 | Convergencia exitosa al nivel de los otros modelos. |
+| Random Forest | 0.076369   | Desempeño ligeramente inferior.                     |
 
-| Métrica | MLP Regressor | Ridge / XGBoost (Promedio) |
-|------|-------------|-----------------------------|
-| Error Cuadrático Medio (MSE) | 0.279298 | ~0.074 |
-| Coeficiente de Determinación (R^2) | -2.73 | 0.0310  |
+## Interpretación del Análisis MLP
 
-### Puntos más importantes del análisis del MLP
+**Convergencia de Modelos:**  
+El hallazgo más revelador es que una red neuronal profunda compleja (MLP) converge prácticamente al mismo error cuadrático medio (MSE ~0.0747) que una regresión lineal penalizada (Ridge, MSE ~0.0742).
 
-- **Falta de Generalización:**  
-  El \(R^2\) negativo indica que la predicción del MLP es menos precisa que utilizar el promedio simple como estimador, evidenciando sobreajuste o incapacidad para extraer señales útiles del ruido financiero.
+**Ausencia de No Linealidad Explotable:**  
+El hecho de que la complejidad adicional de la red neuronal no se traduzca en una mejora predictiva sugiere que la serie de retornos del USD/PEN no contiene patrones no lineales ocultos significativos.
 
-- **Requerimientos de Datos:**  
-  Las redes neuronales requieren un volumen de datos significativamente mayor y una estructura temporal más explícita (por ejemplo, redes recurrentes o Transformers) para capturar dinámicas financieras que los modelos de ensamble como XGBoost manejan mejor con muestras moderadas.
+**Eficiencia del Mercado:**  
+Los resultados refuerzan la hipótesis de que la dinámica del tipo de cambio está dominada por el ruido de alta frecuencia y la inercia lineal, haciendo que los modelos sofisticados "colapsen" hacia soluciones lineales.
 
-- **Superioridad de Modelos Tradicionales:**  
-  La estabilidad de los modelos **Ridge** y **XGBoost** sugiere que la estructura del problema, retornos con inercia y señales altamente ruidosas, se ajusta mejor a modelos que penalizan la complejidad o utilizan árboles de decisión.
+# 8. Conclusiones Generales
 
-En conclusión, aunque el MLP permite modelar interacciones teóricas muy complejas, en el contexto del tipo de cambio peruano los modelos tradicionales resultan ser más precisos y confiables para la toma de decisiones económicas.
+El desarrollo de este análisis, que integra modelos estáticos, dinámicos (ARX) y de machine learning avanzado, permite establecer conclusiones robustas sobre la dinámica del mercado cambiario peruano frente al ecosistema cripto:
 
-## 8. Conclusiones Generales
+**Insignificancia del Sentimiento Cripto:**  
+El Fear & Greed Index (FGI) no presenta un efecto estadísticamente significativo sobre los retornos diarios del USD/PEN, ni en modelos lineales ni en redes neuronales. El sentimiento global del mercado digital no se transmite al mercado cambiario peruano en el corto plazo.
 
-El desarrollo de este análisis, que integra modelos estáticos, dinámicos y de *machine learning*, permite establecer conclusiones robustas sobre la dinámica del mercado cambiario peruano en relación con el ecosistema de activos digitales:
+**Dominancia de la Inercia (Memoria):**  
+El tipo de cambio peruano exhibe una fuerte persistencia autorregresiva. El predictor más potente en todos los modelos fue consistentemente el retorno rezagado del propio tipo de cambio (ret_USD_lag1), confirmando que el sol se mueve principalmente por su propia dinámica histórica e intervenciones de suavización.
 
-- **Insignificancia del Sentimiento Cripto:**  
-  El *Fear & Greed Index (FGI)* no presenta un efecto estadísticamente significativo sobre los retornos del USD/PEN, incluso tras la aplicación de modelos no lineales y el control de variables macroeconómicas.
+**Equivalencia Predictiva:**  
+Todos los modelos evaluados (Ridge, XGBoost y MLP) convergieron a un desempeño predictivo casi idéntico (MSE ≈ 0.075). Esto indica que el error restante corresponde a ruido de mercado irreductible y shocks estocásticos, y no a una falta de capacidad del modelo.
 
-- **Dominancia de la Inercia Temporal:**  
-  El tipo de cambio peruano exhibe una fuerte persistencia, confirmada por la alta significancia del término autorregresivo en el modelo ARX. Esto implica que el comportamiento del sol está más influenciado por su propia dinámica histórica inmediata que por factores externos especulativos.
-
-- **Contribución Marginal del Bitcoin:**  
-  Aunque existe una relación contemporánea entre el Bitcoin y el USD/PEN, su capacidad predictiva es marginal una vez que se controla la dinámica interna del mercado cambiario.
-
-- **Desempeño de Modelos:**  
-  Los algoritmos basados en ensambles de árboles, específicamente **XGBoost** y **Random Forest**, ofrecieron los menores niveles de error (MSE). Por el contrario, el modelo de **Redes Neuronales (MLP)** no logró generalizar adecuadamente debido a la limitación en el tamaño del dataset y la alta complejidad del ruido financiero.
-
-- **Determinantes Estructurales:**  
-  La evolución de la moneda peruana responde primordialmente a shocks globales amplios y factores macroeconómicos estructurales, manteniendo una desconexión con los indicadores de sentimiento específicos del criptomercado.
+**Rol del Bitcoin:**  
+Aunque existe una correlación contemporánea positiva y moderada, el Bitcoin tiene un aporte marginal en la predicción futura. Actúa más como un termómetro de liquidez global coincidente que como un predictor adelantado de la moneda peruana.
 
 ---
 
