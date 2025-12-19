@@ -339,3 +339,33 @@ La fuerte persistencia observada en los retornos del USD/PEN es coherente con lo
 El hecho de que modelos sofisticados como **XGBoost** no superen de manera sustancial a modelos lineales como **Ridge** confirma que, en mercados con fuerte presencia institucional, la mayor parte de la variación diaria es ruido y no información aprovechable. Los modelos complejos capturan interacciones interesantes, pero no logran vencer la eficiencia del mercado cuando la señal fundamental es débil.
 
 En conjunto, los resultados refuerzan la idea de que el **USD/PEN** es un activo de baja volatilidad y alta resiliencia institucional, cuya transmisión frente al sentimiento global especulativo es significativamente más débil que en otros activos financieros de la región.
+
+# 10. Referencias Bibliográficas
+
+## Sentimiento y mercados financieros
+
+Baker, M., & Wurgler, J. (2007). Investor sentiment in the stock market. *Journal of Economic Perspectives*, 21(2), 129–151.
+
+García, D. (2013). Sentiment during recessions. *Journal of Finance*, 68(3), 1267–1300.
+
+## Bitcoin, riesgo global y mercados financieros
+
+Baur, D. G., Hong, K., & Lee, A. D. (2018). Bitcoin: medium of exchange or speculative assets? *Journal of International Financial Markets, Institutions & Money*, 54, 177–189.
+
+Corbet, S., Lucey, B., & Yarovaya, L. (2019). The financial market effects of cryptocurrency energy prices. *Energy Economics*, 84, 104502.
+
+## Tipo de cambio y macroeconomía peruana
+
+Banco Central de Reserva del Perú (BCRP). (2023). *Reporte de Inflación*. Lima, Perú.
+
+Rossini, A. (2010). Intervenciones cambiarias y mecanismos de transmisión en economías emergentes. Banco Central de Reserva del Perú.
+
+## Series de tiempo y modelos ARX
+
+Hamilton, J. D. (1994). *Time Series Analysis*. Princeton University Press.
+
+Stock, J. H., & Watson, M. W. (2016). *Introduction to Econometrics*. Pearson.
+
+## Machine Learning y eficiencia de mercados financieros
+
+Gu, S., Kelly, B., & Xiu, D. (2020). Empirical asset pricing via machine learning. *Review of Financial Studies*, 33(5), 2223–2273.
